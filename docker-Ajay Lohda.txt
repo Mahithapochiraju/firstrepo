@@ -1,0 +1,736 @@
+************************************************************************
+type 1 heypervisor: combination of os and hypervisor (bare metal technology)
+Eg: VMware, XEN
+
+type 2: hypervisor over os(testing purpose)
+Eg: Virtual Box, 
+************************************************************************
+Docker images are read only.
+When a docker image is started or run, they bcome containers.
+Top layer of container is writable.
+Docker images are stored in docker hub/ registry/ repository
+Docker hub stores only authentic images(free from malware etc.)
+************************************************************************
+client: docker cli, api calls
+************************************************************************
+
+*******************************************************************************
+PRACTICAL
+*******************************************************************
+Using username "ec2-user".
+Authenticating with public key "imported-openssh-key"
+
+       __|  __|_  )
+       _|  (     /   Amazon Linux AMI
+      ___|\___|___|
+
+https://aws.amazon.com/amazon-linux-ami/2018.03-release-notes/
+[ec2-user@ip-172-31-83-155 ~]$ yum install docker -y
+Loaded plugins: priorities, update-motd, upgrade-helper
+You need to be root to perform this command.
+[ec2-user@ip-172-31-83-155 ~]$ sudo yum install docker -y
+Loaded plugins: priorities, update-motd, upgrade-helper
+amzn-main                                                | 2.1 kB     00:00
+amzn-updates                                             | 2.5 kB     00:00
+Resolving Dependencies
+--> Running transaction check
+---> Package docker.x86_64 0:18.03.1ce-5.0.amzn1 will be installed
+--> Processing Dependency: xfsprogs for package: docker-18.03.1ce-5.0.amzn1.x86_                    64
+--> Processing Dependency: libseccomp.so.2()(64bit) for package: docker-18.03.1c                    e-5.0.amzn1.x86_64
+--> Processing Dependency: libltdl.so.7()(64bit) for package: docker-18.03.1ce-5                    .0.amzn1.x86_64
+--> Running transaction check
+---> Package libseccomp.x86_64 0:2.3.1-2.4.amzn1 will be installed
+---> Package libtool-ltdl.x86_64 0:2.4.2-20.4.8.5.32.amzn1 will be installed
+---> Package xfsprogs.x86_64 0:4.5.0-9.21.amzn1 will be installed
+--> Finished Dependency Resolution
+
+Dependencies Resolved
+
+================================================================================
+ Package          Arch       Version                     Repository        Size
+================================================================================
+Installing:
+ docker           x86_64     18.03.1ce-5.0.amzn1         amzn-updates      40 M
+Installing for dependencies:
+ libseccomp       x86_64     2.3.1-2.4.amzn1             amzn-main         79 k
+ libtool-ltdl     x86_64     2.4.2-20.4.8.5.32.amzn1     amzn-main         51 k
+ xfsprogs         x86_64     4.5.0-9.21.amzn1            amzn-main        1.7 M
+
+Transaction Summary
+================================================================================
+Install  1 Package (+3 Dependent packages)
+
+Total download size: 42 M
+Installed size: 141 M
+Downloading packages:
+(1/4): libtool-ltdl-2.4.2-20.4.8.5.32.amzn1.x86_64.rpm     |  51 kB   00:00
+(2/4): libseccomp-2.3.1-2.4.amzn1.x86_64.rpm               |  79 kB   00:00
+(3/4): xfsprogs-4.5.0-9.21.amzn1.x86_64.rpm                | 1.7 MB   00:00
+(4/4): docker-18.03.1ce-5.0.amzn1.x86_64.rpm               |  40 MB   00:20
+--------------------------------------------------------------------------------
+Total                                              2.0 MB/s |  42 MB  00:20
+Running transaction check
+Running transaction test
+Transaction test succeeded
+Running transaction
+  Installing : libseccomp-2.3.1-2.4.amzn1.x86_64                            1/4
+  Installing : libtool-ltdl-2.4.2-20.4.8.5.32.amzn1.x86_64                  2/4
+  Installing : xfsprogs-4.5.0-9.21.amzn1.x86_64                             3/4
+  Installing : docker-18.03.1ce-5.0.amzn1.x86_64                            4/4
+  Verifying  : xfsprogs-4.5.0-9.21.amzn1.x86_64                             1/4
+  Verifying  : libtool-ltdl-2.4.2-20.4.8.5.32.amzn1.x86_64                  2/4
+  Verifying  : docker-18.03.1ce-5.0.amzn1.x86_64                            3/4
+  Verifying  : libseccomp-2.3.1-2.4.amzn1.x86_64                            4/4
+
+Installed:
+  docker.x86_64 0:18.03.1ce-5.0.amzn1
+
+Dependency Installed:
+  libseccomp.x86_64 0:2.3.1-2.4.amzn1
+  libtool-ltdl.x86_64 0:2.4.2-20.4.8.5.32.amzn1
+  xfsprogs.x86_64 0:4.5.0-9.21.amzn1
+
+Complete!
+[ec2-user@ip-172-31-83-155 ~]$ ps -ef /grep -i docker
+ERROR: Garbage option.
+********* simple selection *********  ********* selection by list *********
+-A all processes                      -C by command name
+-N negate selection                   -G by real group ID (supports names)
+-a all w/ tty except session leaders  -U by real user ID (supports names)
+-d all except session leaders         -g by session OR by effective group name
+-e all processes                      -p by process ID
+                                      -q by process ID (unsorted & quick)
+T  all processes on this terminal     -s processes in the sessions given
+a  all w/ tty, including other users  -t by tty
+g  OBSOLETE -- DO NOT USE             -u by effective user ID (supports names)
+r  only running processes             U  processes for specified users
+x  processes w/o controlling ttys     t  by tty
+*********** output format **********  *********** long options ***********
+-o,o user-defined  -f full            --Group --User --pid --cols --ppid
+-j,j job control   s  signal          --group --user --sid --rows --info
+-O,O preloaded -o  v  virtual memory  --cumulative --format --deselect
+-l,l long          u  user-oriented   --sort --tty --forest --version
+-F   extra full    X  registers       --heading --no-heading --context
+                                      --quick-pid
+                    ********* misc options *********
+-V,V  show version      L  list format codes  f  ASCII art forest
+-m,m,-L,-T,H  threads   S  children in sum    -y change -l format
+-M,Z  security data     c  true command name  -c scheduling class
+-w,w  wide output       n  numeric WCHAN,UID  -H process hierarchy
+[ec2-user@ip-172-31-83-155 ~]$ sudo su
+[root@ip-172-31-83-155 ec2-user]# yum install docker -y
+Loaded plugins: priorities, update-motd, upgrade-helper
+Package docker-18.03.1ce-5.0.amzn1.x86_64 already installed and latest version
+Nothing to do
+[root@ip-172-31-83-155 ec2-user]# ps -ef /grep -i docker
+ERROR: Garbage option.
+********* simple selection *********  ********* selection by list *********
+-A all processes                      -C by command name
+-N negate selection                   -G by real group ID (supports names)
+-a all w/ tty except session leaders  -U by real user ID (supports names)
+-d all except session leaders         -g by session OR by effective group name
+-e all processes                      -p by process ID
+                                      -q by process ID (unsorted & quick)
+T  all processes on this terminal     -s processes in the sessions given
+a  all w/ tty, including other users  -t by tty
+g  OBSOLETE -- DO NOT USE             -u by effective user ID (supports names)
+r  only running processes             U  processes for specified users
+x  processes w/o controlling ttys     t  by tty
+*********** output format **********  *********** long options ***********
+-o,o user-defined  -f full            --Group --User --pid --cols --ppid
+-j,j job control   s  signal          --group --user --sid --rows --info
+-O,O preloaded -o  v  virtual memory  --cumulative --format --deselect
+-l,l long          u  user-oriented   --sort --tty --forest --version
+-F   extra full    X  registers       --heading --no-heading --context
+                                      --quick-pid
+                    ********* misc options *********
+-V,V  show version      L  list format codes  f  ASCII art forest
+-m,m,-L,-T,H  threads   S  children in sum    -y change -l format
+-M,Z  security data     c  true command name  -c scheduling class
+-w,w  wide output       n  numeric WCHAN,UID  -H process hierarchy
+[root@ip-172-31-83-155 ec2-user]# ps -ef / grep -i docker
+ERROR: Garbage option.
+********* simple selection *********  ********* selection by list *********
+-A all processes                      -C by command name
+-N negate selection                   -G by real group ID (supports names)
+-a all w/ tty except session leaders  -U by real user ID (supports names)
+-d all except session leaders         -g by session OR by effective group name
+-e all processes                      -p by process ID
+                                      -q by process ID (unsorted & quick)
+T  all processes on this terminal     -s processes in the sessions given
+a  all w/ tty, including other users  -t by tty
+g  OBSOLETE -- DO NOT USE             -u by effective user ID (supports names)
+r  only running processes             U  processes for specified users
+x  processes w/o controlling ttys     t  by tty
+*********** output format **********  *********** long options ***********
+-o,o user-defined  -f full            --Group --User --pid --cols --ppid
+-j,j job control   s  signal          --group --user --sid --rows --info
+-O,O preloaded -o  v  virtual memory  --cumulative --format --deselect
+-l,l long          u  user-oriented   --sort --tty --forest --version
+-F   extra full    X  registers       --heading --no-heading --context
+                                      --quick-pid
+                    ********* misc options *********
+-V,V  show version      L  list format codes  f  ASCII art forest
+-m,m,-L,-T,H  threads   S  children in sum    -y change -l format
+-M,Z  security data     c  true command name  -c scheduling class
+-w,w  wide output       n  numeric WCHAN,UID  -H process hierarchy
+[root@ip-172-31-83-155 ec2-user]# ps -ef / grep -i docker
+ERROR: Garbage option.
+********* simple selection *********  ********* selection by list *********
+-A all processes                      -C by command name
+-N negate selection                   -G by real group ID (supports names)
+-a all w/ tty except session leaders  -U by real user ID (supports names)
+-d all except session leaders         -g by session OR by effective group name
+-e all processes                      -p by process ID
+                                      -q by process ID (unsorted & quick)
+T  all processes on this terminal     -s processes in the sessions given
+a  all w/ tty, including other users  -t by tty
+g  OBSOLETE -- DO NOT USE             -u by effective user ID (supports names)
+r  only running processes             U  processes for specified users
+x  processes w/o controlling ttys     t  by tty
+*********** output format **********  *********** long options ***********
+-o,o user-defined  -f full            --Group --User --pid --cols --ppid
+-j,j job control   s  signal          --group --user --sid --rows --info
+-O,O preloaded -o  v  virtual memory  --cumulative --format --deselect
+-l,l long          u  user-oriented   --sort --tty --forest --version
+-F   extra full    X  registers       --heading --no-heading --context
+                                      --quick-pid
+                    ********* misc options *********
+-V,V  show version      L  list format codes  f  ASCII art forest
+-m,m,-L,-T,H  threads   S  children in sum    -y change -l format
+-M,Z  security data     c  true command name  -c scheduling class
+-w,w  wide output       n  numeric WCHAN,UID  -H process hierarchy
+[root@ip-172-31-83-155 ec2-user]# ps -ef|grep -i docker
+root      2812  2794  0 05:29 pts/0    00:00:00 grep --color=auto -i docker
+[root@ip-172-31-83-155 ec2-user]# service docker start
+Starting cgconfig service:                                 [  OK  ]
+Starting docker:        .                                  [  OK  ]
+[root@ip-172-31-83-155 ec2-user]# ps -ef|grep -i docker
+root      2888     1  2 05:33 pts/0    00:00:00 /usr/bin/dockerd --default-ulimit nofile=1024:4096
+root      2894  2888  0 05:33 ?        00:00:00 docker-containerd --config /var/run/docker/containerd/containerd.toml
+root      3027  2794  0 05:33 pts/0    00:00:00 grep --color=auto -i docker
+[root@ip-172-31-83-155 ec2-user]#
+*********************************************************************************************************************************
+[root@ip-172-31-83-155 ec2-user]# docker
+
+Usage:  docker COMMAND
+
+A self-sufficient runtime for containers
+
+Options:
+      --config string      Location of client config files (default "/root/.docker")
+  -D, --debug              Enable debug mode
+  -H, --host list          Daemon socket(s) to connect to
+  -l, --log-level string   Set the logging level ("debug"|"info"|"warn"|"error"|"fatal")
+                           (default "info")
+      --tls                Use TLS; implied by --tlsverify
+      --tlscacert string   Trust certs signed only by this CA (default "/root/.docker/ca.pem")
+      --tlscert string     Path to TLS certificate file (default "/root/.docker/cert.pem")
+      --tlskey string      Path to TLS key file (default "/root/.docker/key.pem")
+      --tlsverify          Use TLS and verify the remote
+  -v, --version            Print version information and quit
+
+Management Commands:
+  config      Manage Docker configs
+  container   Manage containers
+  image       Manage images
+  network     Manage networks
+  node        Manage Swarm nodes
+  plugin      Manage plugins
+  secret      Manage Docker secrets
+  service     Manage services
+  swarm       Manage Swarm
+  system      Manage Docker
+  trust       Manage trust on Docker images
+  volume      Manage volumes
+
+Commands:
+  attach      Attach local standard input, output, and error streams to a running container
+  build       Build an image from a Dockerfile
+  commit      Create a new image from a container's changes
+  cp          Copy files/folders between a container and the local filesystem
+  create      Create a new container
+  diff        Inspect changes to files or directories on a container's filesystem
+  events      Get real time events from the server
+  exec        Run a command in a running container
+  export      Export a container's filesystem as a tar archive
+  history     Show the history of an image
+  images      List images
+  import      Import the contents from a tarball to create a filesystem image
+  info        Display system-wide information
+  inspect     Return low-level information on Docker objects
+  kill        Kill one or more running containers
+  load        Load an image from a tar archive or STDIN
+  login       Log in to a Docker registry
+  logout      Log out from a Docker registry
+  logs        Fetch the logs of a container
+  pause       Pause all processes within one or more containers
+  port        List port mappings or a specific mapping for the container
+  ps          List containers
+  pull        Pull an image or a repository from a registry
+  push        Push an image or a repository to a registry
+  rename      Rename a container
+  restart     Restart one or more containers
+  rm          Remove one or more containers
+  rmi         Remove one or more images
+  run         Run a command in a new container
+  save        Save one or more images to a tar archive (streamed to STDOUT by default)
+  search      Search the Docker Hub for images
+  start       Start one or more stopped containers
+  stats       Display a live stream of container(s) resource usage statistics
+  stop        Stop one or more running containers
+  tag         Create a tag TARGET_IMAGE that refers to SOURCE_IMAGE
+  top         Display the running processes of a container
+  unpause     Unpause all processes within one or more containers
+  update      Update configuration of one or more containers
+  version     Show the Docker version information
+  wait        Block until one or more containers stop, then print their exit codes
+
+Run 'docker COMMAND --help' for more information on a command.
+***********************************************************************************************************************************
+ps: process
+ef: 
+***********************************************************************************************************************************
+[root@ip-172-31-83-155 ec2-user]# docker pull java
+Using default tag: latest
+latest: Pulling from library/java
+5040bd298390: Pull complete
+fce5728aad85: Pull complete
+76610ec20bf5: Pull complete
+60170fec2151: Pull complete
+e98f73de8f0d: Pull complete
+11f7af24ed9c: Pull complete
+49e2d6393f32: Pull complete
+bb9cdec9c7f3: Pull complete
+Digest: sha256:c1ff613e8ba25833d2e1940da0940c3824f03f802c449f3d1815a66b7f8c0e9d
+Status: Downloaded newer image for java:latest
+****************************************************************
+[root@ip-172-31-83-155 ec2-user]# docker images
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+httpd               latest              11426a19f1a2        2 weeks ago         178MB
+java                latest              d23bdf5b1b1b        19 months ago       643MB
+****************************************************************docker ps: Shows which containers are running
+****************************************************************
+
+Using username "ec2-user".
+Authenticating with public key "imported-openssh-key"
+Last login: Mon Aug 20 06:47:53 2018 from 123.242.248.130
+
+       __|  __|_  )
+       _|  (     /   Amazon Linux AMI
+      ___|\___|___|
+
+https://aws.amazon.com/amazon-linux-ami/2018.03-release-notes/
+[ec2-user@ip-172-31-83-155 ~]$ docker images
+Got permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock: Get http://%2Fvar%2Frun%2Fdocker.sock/v1.37/images/json: dial unix /var/run/docker.sock: connect: permission denied
+[ec2-user@ip-172-31-83-155 ~]$ sudo su
+[root@ip-172-31-83-155 ec2-user]# docker images
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+busybox             latest              e1ddd7948a1c        2 weeks ago         1.16MB
+httpd               latest              11426a19f1a2        2 weeks ago         178MB
+hello-world         latest              2cb0d9787c4d        5 weeks ago         1.85kB
+alpine              latest              11cd0b38bc3c        6 weeks ago         4.41MB
+java                latest              d23bdf5b1b1b        19 months ago       643MB
+[root@ip-172-31-83-155 ec2-user]# docker rmi d23bdf5b1b1b
+Error response from daemon: conflict: unable to delete d23bdf5b1b1b (must be forced) - image is being used by stopped container a735b6217921
+[root@ip-172-31-83-155 ec2-user]# docker ps -a
+CONTAINER ID        IMAGE               COMMAND              CREATED             STATUS                           PORTS               NAMES
+0aa7ac7f0dc2        hello-world         "/hello"             21 minutes ago      Exited (0) 21 minutes ago                            lucid_hugle
+fed956548a04        alpine              "/bin/sh"            About an hour ago   Exited (137) About an hour ago                       elegant_swanson
+5c53444f894c        alpine              "/bin/sh"            About an hour ago   Exited (0) About an hour ago                         focused_ptolemy
+98a28f1dc0ff        busybox             "sh"                 About an hour ago   Exited (137) About an hour ago                       quirky_easley
+a8a1b03b4e8b        busybox             "sh"                 About an hour ago   Exited (0) About an hour ago                         affectionate_kare
+230ee7281651        busybox             "sh"                 About an hour ago   Exited (0) About an hour ago                         zen_curran
+a18f9f89ebe3        java                "/bin/bash"          About an hour ago   Exited (0) About an hour ago                         wizardly_pare
+9affa392f447        httpd               "httpd-foreground"   About an hour ago   Exited (0) About an hour ago                         admiring_roentgen
+a735b6217921        java                "/bin/bash"          About an hour ago   Exited (0) About an hour ago                         romantic_kalam
+[root@ip-172-31-83-155 ec2-user]# delete rm a735b6217921
+bash: delete: command not found
+[root@ip-172-31-83-155 ec2-user]# docker rm a735b6217921
+a735b6217921
+[root@ip-172-31-83-155 ec2-user]# docker rmi d23bdf5b1b1b
+Error response from daemon: conflict: unable to delete d23bdf5b1b1b (must be forced) - image is being used by stopped container a18f9f89ebe3
+[root@ip-172-31-83-155 ec2-user]# docker rm a18f9f89ebe3
+a18f9f89ebe3
+[root@ip-172-31-83-155 ec2-user]# docker rmi d23bdf5b1b1b
+Untagged: java:latest
+Untagged: java@sha256:c1ff613e8ba25833d2e1940da0940c3824f03f802c449f3d1815a66b7f8c0e9d
+Deleted: sha256:d23bdf5b1b1b1afce5f1d0fd33e7ed8afbc084b594b9ccf742a5b27080d8a4a8
+Deleted: sha256:0132aeca1bc9ac49d397635d34675915693a8727b103639ddee3cc5438e0f60a
+Deleted: sha256:c011315277e16e6c88687a6c683e388e2879f9a195113129a2ca12f782d9fcf9
+Deleted: sha256:3181aa7c07970b525de9d3bd15c4c3710a2ab49fd5927df41e5586d9b89b1480
+Deleted: sha256:b0053647bc72f97b7a9709a505a20a7a74a556c6aa025979e36532ff3df7cb8d
+Deleted: sha256:0877f4904e80b44741cc07706b19c6d415724b20128f4b26ee59faec9a859416
+Deleted: sha256:dbf7b16cf5d32dfec3058391a92361a09745421deb2491545964f8ba99b37fc2
+Deleted: sha256:4cbc0ad7007fe8c2dfcf2cdc82fdb04f35070f0e2a04d5fa35093977a3cc1693
+Deleted: sha256:a2ae92ffcd29f7ededa0320f4a4fd709a723beae9a4e681696874932db7aee2c
+[root@ip-172-31-83-155 ec2-user]# docker images
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+busybox             latest              e1ddd7948a1c        2 weeks ago         1.16MB
+httpd               latest              11426a19f1a2        2 weeks ago         178MB
+hello-world         latest              2cb0d9787c4d        5 weeks ago         1.85kB
+alpine              latest              11cd0b38bc3c        6 weeks ago         4.41MB
+[root@ip-172-31-83-155 ec2-user]# docker run -itd  --name website1 -p 8080:80 httpd
+467a78791e743a919f31c6429a9ac3f56051638d927565d26a25ba855ca0b2fc
+[root@ip-172-31-83-155 ec2-user]# docker run -itd  --name website1 -p 8081:80 httpd
+docker: Error response from daemon: Conflict. The container name "/website1" is already in use by container "467a78791e743a919f31c6429a9ac3f56051638d927565d26a25ba855ca0b2fc". You have to remove (or rename) that container to be able to reuse that name.
+See 'docker run --help'.
+[root@ip-172-31-83-155 ec2-user]# docker run -itd  --name website2 -p 8081:80 httpd
+d1b33225232e13feea49bd5752918560b9f62a5d30ceb46e63401f6f450cdb93
+[root@ip-172-31-83-155 ec2-user]# curl http://54.87.238.120:8080
+curl: (7) Failed to connect to 54.87.238.120 port 8080: Connection timed out
+[root@ip-172-31-83-155 ec2-user]# curl http://54.87.238.120:8080
+
+^C
+[root@ip-172-31-83-155 ec2-user]# curl http://54.87.238.120:8081
+^C
+[root@ip-172-31-83-155 ec2-user]# curl http://54.87.238.120
+curl: (7) Failed to connect to 54.87.238.120 port 80: Connection refused
+[root@ip-172-31-83-155 ec2-user]# curl http://54.87.238.120:8080
+kcurl: (7) Failed to connect to 54.87.238.120 port 8080: Connection timed out
+[root@ip-172-31-83-155 ec2-user]# curl http://54.87.238.120:8080
+^C
+[root@ip-172-31-83-155 ec2-user]# curl http://54.87.238.120:8080
+<html><body><h1>It works!</h1></body></html>
+[root@ip-172-31-83-155 ec2-user]# curl http://54.87.238.120:8081
+<html><body><h1>It works!</h1></body></html>
+[root@ip-172-31-83-155 ec2-user]# docker ps
+CONTAINER ID        IMAGE               COMMAND              CREATED             STATUS              PORTS                  NAMES
+d1b33225232e        httpd               "httpd-foreground"   About an hour ago   Up About an hour    0.0.0.0:8081->80/tcp   website2
+467a78791e74        httpd               "httpd-foreground"   About an hour ago   Up About an hour    0.0.0.0:8080->80/tcp   website1
+[root@ip-172-31-83-155 ec2-user]# docker export d1b33225232e -o httpd1.tar
+[root@ip-172-31-83-155 ec2-user]# ls -l
+total 178356
+-rw------- 1 root root 182633984 Aug 20 08:35 httpd1.tar
+********************************************************************************************************************************************************************************************************************************************************
+********************************************************************************************************************************************************************************************************************************************************************************************
+Using username "ec2-user".
+Authenticating with public key "imported-openssh-key"
+
+       __|  __|_  )
+       _|  (     /   Amazon Linux AMI
+      ___|\___|___|
+
+https://aws.amazon.com/amazon-linux-ami/2018.03-release-notes/
+[ec2-user@ip-172-31-84-72 ~]$ -+
+-bash: -+: command not found
+[ec2-user@ip-172-31-84-72 ~]$ clear
+[ec2-user@ip-172-31-84-72 ~]$ sudo su
+[root@ip-172-31-84-72 ec2-user]# yum update
+Loaded plugins: priorities, update-motd, upgrade-helper
+amzn-main                                                | 2.1 kB     00:00
+amzn-updates                                             | 2.5 kB     00:00
+No packages marked for update
+[root@ip-172-31-84-72 ec2-user]# yum install -y docker
+Loaded plugins: priorities, update-motd, upgrade-helper
+Resolving Dependencies
+--> Running transaction check
+---> Package docker.x86_64 0:18.03.1ce-5.0.amzn1 will be installed
+--> Processing Dependency: xfsprogs for package: docker-18.03.1ce-5.0.amzn1.x86_64
+--> Processing Dependency: libseccomp.so.2()(64bit) for package: docker-18.03.1ce-5.0.amzn1.x86_64
+--> Processing Dependency: libltdl.so.7()(64bit) for package: docker-18.03.1ce-5.0.amzn1.x86_64
+--> Running transaction check
+---> Package libseccomp.x86_64 0:2.3.1-2.4.amzn1 will be installed
+---> Package libtool-ltdl.x86_64 0:2.4.2-20.4.8.5.32.amzn1 will be installed
+---> Package xfsprogs.x86_64 0:4.5.0-9.21.amzn1 will be installed
+--> Finished Dependency Resolution
+
+Dependencies Resolved
+
+================================================================================
+ Package          Arch       Version                     Repository        Size
+================================================================================
+Installing:
+ docker           x86_64     18.03.1ce-5.0.amzn1         amzn-updates      40 M
+Installing for dependencies:
+ libseccomp       x86_64     2.3.1-2.4.amzn1             amzn-main         79 k
+ libtool-ltdl     x86_64     2.4.2-20.4.8.5.32.amzn1     amzn-main         51 k
+ xfsprogs         x86_64     4.5.0-9.21.amzn1            amzn-main        1.7 M
+
+Transaction Summary
+================================================================================
+Install  1 Package (+3 Dependent packages)
+
+Total download size: 42 M
+Installed size: 141 M
+Downloading packages:
+(1/4): libtool-ltdl-2.4.2-20.4.8.5.32.amzn1.x86_64.rpm     |  51 kB   00:00
+(2/4): libseccomp-2.3.1-2.4.amzn1.x86_64.rpm               |  79 kB   00:00
+(3/4): xfsprogs-4.5.0-9.21.amzn1.x86_64.rpm                | 1.7 MB   00:01
+(4/4): docker-18.03.1ce-5.0.amzn1.x86_64.rpm               |  40 MB   00:18
+--------------------------------------------------------------------------------
+Total                                              2.3 MB/s |  42 MB  00:18
+Running transaction check
+Running transaction test
+Transaction test succeeded
+Running transaction
+  Installing : libseccomp-2.3.1-2.4.amzn1.x86_64                            1/4
+  Installing : libtool-ltdl-2.4.2-20.4.8.5.32.amzn1.x86_64                  2/4
+  Installing : xfsprogs-4.5.0-9.21.amzn1.x86_64                             3/4
+  Installing : docker-18.03.1ce-5.0.amzn1.x86_64                            4/4
+  Verifying  : xfsprogs-4.5.0-9.21.amzn1.x86_64                             1/4
+  Verifying  : libtool-ltdl-2.4.2-20.4.8.5.32.amzn1.x86_64                  2/4
+  Verifying  : docker-18.03.1ce-5.0.amzn1.x86_64                            3/4
+  Verifying  : libseccomp-2.3.1-2.4.amzn1.x86_64                            4/4
+
+Installed:
+  docker.x86_64 0:18.03.1ce-5.0.amzn1
+
+Dependency Installed:
+  libseccomp.x86_64 0:2.3.1-2.4.amzn1
+  libtool-ltdl.x86_64 0:2.4.2-20.4.8.5.32.amzn1
+  xfsprogs.x86_64 0:4.5.0-9.21.amzn1
+
+Complete!
+[root@ip-172-31-84-72 ec2-user]# usermod -a -G docker ec2-user
+[root@ip-172-31-84-72 ec2-user]# curl -L https://github.com/docker/compose/releases/download/1.9.0/docker-compose-`uname -s`-`uname -m` | sudo tee /usr/local/bin/docker-compose > /dev/null
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   617    0   617    0     0   3559      0 --:--:-- --:--:-- --:--:--  3566
+100 7857k  100 7857k    0     0  17.5M      0 --:--:-- --:--:-- --:--:-- 17.5M
+[root@ip-172-31-84-72 ec2-user]# chmod +x /usr/local/bin/docker-compose
+[root@ip-172-31-84-72 ec2-user]# service docker start
+Starting cgconfig service:                                 [  OK  ]
+Starting docker:        .                                  [  OK  ]
+[root@ip-172-31-84-72 ec2-user]# chkconfig docker on
+[root@ip-172-31-84-72 ec2-user]#
+**********************************************************************************************************************************************************************************************************************
+**************************************************************************************************************************************************************************************************************************************
+Using username "ec2-user".
+Authenticating with public key "imported-openssh-key"
+Last login: Tue Aug 21 05:09:27 2018 from 123.242.248.130
+
+       __|  __|_  )
+       _|  (     /   Amazon Linux AMI
+      ___|\___|___|
+
+https://aws.amazon.com/amazon-linux-ami/2018.03-release-notes/
+[ec2-user@ip-172-31-84-72 ~]$ sudo su
+[root@ip-172-31-84-72 ec2-user]# vi docker-compose.yml
+[root@ip-172-31-84-72 ec2-user]# /usr/local/bin/docker-compose up
+ERROR: yaml.scanner.ScannerError: while scanning for the next token
+found character '\t' that cannot start any token
+  in "./docker-compose.yml", line 20, column 1
+[root@ip-172-31-84-72 ec2-user]# vi docker-compose.yml
+[root@ip-172-31-84-72 ec2-user]# /usr/local/bin/docker-compose up
+ERROR: yaml.scanner.ScannerError: while scanning for the next token
+found character '\t' that cannot start any token
+  in "./docker-compose.yml", line 19, column 37
+[root@ip-172-31-84-72 ec2-user]# vi docker-compose.yml
+[root@ip-172-31-84-72 ec2-user]# /usr/local/bin/docker-compose up
+Pulling wordpress_db (mariadb:latest)...
+latest: Pulling from library/mariadb
+c64513b74145: Pull complete
+01b8b12bad90: Pull complete
+c5d85cf7a05f: Pull complete
+b6b268720157: Pull complete
+e12192999ff1: Pull complete
+ccf7ebdee0e6: Pull complete
+64ea18a89ab6: Pull complete
+95a351308aea: Pull complete
+ef24c7657c2f: Pull complete
+29b5cb4861e5: Pull complete
+9ed6d999842e: Pull complete
+1c2e0259da59: Pull complete
+9c12a329a4f4: Pull complete
+6234e89f5c58: Pull complete
+263caca177cc: Pull complete
+Digest: sha256:cb7a12fb62e62fd2d2609a6ae9da11d7e9c0d67192757a243ac96b60dc0ac800
+Status: Downloaded newer image for mariadb:latest
+Pulling phpmyadmin (corbinu/docker-phpmyadmin:latest)...
+latest: Pulling from corbinu/docker-phpmyadmin
+04c460fac791: Pulling fs layer
+0a0916b29f3e: Pulling fs layer
+b25f4e7a7766: Pulling fs layer
+a3ed95caeb02: Pulling fs layer
+7136a616e591: Pulling fs layer
+11e7862af650: Pulling fs layer
+6a4480f4239f: Pulling fs layer
+698eb0d29cb6: Pulling fs layer
+629758ad2bcf: Pulling fs layer
+e13960c1a885: Pulling fs layer
+506182eb548e: Pulling fs layer
+81c5e32f580b: Pulling fs layer
+f3065e3bf7de: Pulling fs layer
+d67ecc2c18c4: Pull complete
+e621b5ca4a3f: Pull complete
+daea64d2ecba: Pull complete
+e0353618bb7b: Pull complete
+9e083f290d0a: Pull complete
+7751801282fe: Pull complete
+6c9f4a93838f: Pull complete
+61487b4ae0e0: Pull complete
+821a863e22ef: Pull complete
+d42f3ff332ba: Pull complete
+4b91e3b60f7f: Pull complete
+19098a8c72d7: Pull complete
+54ee09453c5c: Pull complete
+d1041b63864e: Pull complete
+f95ea5d88409: Pull complete
+536ffbe25885: Pull complete
+d58076db7b2b: Pull complete
+ee108d1d3937: Pull complete
+33dd6f5fc154: Pull complete
+629d778e3f37: Pull complete
+8744abe0098a: Pull complete
+cd1c70bb10b8: Pull complete
+44f124587a1d: Pull complete
+Digest: sha256:8ba64f73a8f28f62c00c9515171361b9d5f7a0c6f6fa0aa4418839f9974d098d
+Status: Downloaded newer image for corbinu/docker-phpmyadmin:latest
+Pulling wordpress (wordpress:latest)...
+latest: Pulling from library/wordpress
+be8881be8156: Pull complete
+69a25f7e4930: Pull complete
+65632e89c5f4: Pull complete
+cd75fa32da8f: Pull complete
+15bc7736db11: Pull complete
+b2c40cef4807: Pull complete
+f3507e55e5eb: Pull complete
+e6006cdfa16b: Pull complete
+a3ed406e3c88: Pull complete
+745f1366071d: Pull complete
+bdfcada64ad8: Pull complete
+86f2b695cc77: Pull complete
+5f634a03970a: Pull complete
+a329a7ebde19: Pull complete
+fb3d2649f534: Pull complete
+8fa928654124: Pull complete
+a925e4a45888: Pull complete
+b5e827c13dc3: Pull complete
+61b17faecc30: Pull complete
+c85ae8a39ff7: Pull complete
+Digest: sha256:d92a0d4e9aae885789af8538bb8afe8624c23cb5d763dcc1d3a2e4ac57531d21
+Status: Downloaded newer image for wordpress:latest
+Creating ec2user_wordpress_db_1
+Creating ec2user_wordpress_1
+Creating ec2user_phpmyadmin_1
+Attaching to ec2user_wordpress_db_1, ec2user_wordpress_1, ec2user_phpmyadmin_1
+wordpress_1     | WordPress not found in /var/www/html - copying now...
+phpmyadmin_1    | Warning: Using a password on the command line interface can be                                   insecure.
+phpmyadmin_1    | ERROR 2003 (HY000): Can't connect to MySQL server on '172.17.0                                  .2' (111)
+phpmyadmin_1    | Warning: Using a password on the command line interface can be                                   insecure.
+phpmyadmin_1    | ERROR 2003 (HY000): Can't connect to MySQL server on '172.17.0                                  .2' (111)
+wordpress_db_1  | Initializing database
+wordpress_1     | Complete! WordPress has been successfully copied to /var/www/h                                  tml
+wordpress_1     |
+wordpress_1     | Warning: mysqli::__construct(): (HY000/2002): Connection refus                                  ed in Standard input code on line 22
+wordpress_1     |
+wordpress_1     | MySQL Connection Error: (2002) Connection refused
+wordpress_db_1  |
+wordpress_db_1  |
+wordpress_db_1  | PLEASE REMEMBER TO SET A PASSWORD FOR THE MariaDB root USER !
+wordpress_db_1  | To do so, start the server, then issue the following commands:
+wordpress_db_1  |
+wordpress_db_1  | '/usr/bin/mysqladmin' -u root password 'new-password'
+wordpress_db_1  | '/usr/bin/mysqladmin' -u root -h  password 'new-password'
+wordpress_db_1  |
+wordpress_db_1  | Alternatively you can run:
+wordpress_db_1  | '/usr/bin/mysql_secure_installation'
+wordpress_db_1  |
+wordpress_db_1  | which will also give you the option of removing the test
+wordpress_db_1  | databases and anonymous user created by default.  This is
+wordpress_db_1  | strongly recommended for production servers.
+wordpress_db_1  |
+wordpress_db_1  | See the MariaDB Knowledgebase at http://mariadb.com/kb or the
+wordpress_db_1  | MySQL manual for more instructions.
+wordpress_db_1  |
+wordpress_db_1  | Please report any problems at http://mariadb.org/jira
+wordpress_db_1  |
+wordpress_db_1  | The latest information about MariaDB is available at http://ma                                  riadb.org/.
+wordpress_db_1  | You can find additional information about the MySQL part at:
+wordpress_db_1  | http://dev.mysql.com
+wordpress_db_1  | Consider joining MariaDB's strong and vibrant community:
+wordpress_db_1  | https://mariadb.org/get-involved/
+wordpress_db_1  |
+wordpress_db_1  | Database initialized
+wordpress_db_1  | MySQL init process in progress...
+wordpress_db_1  | 2018-08-21  5:21:47 0 [Note] mysqld (mysqld 10.3.9-MariaDB-1:1                                  0.3.9+maria~bionic) starting as process 100 ...
+wordpress_db_1  | 2018-08-21  5:21:47 0 [Note] InnoDB: Using Linux native AIO
+wordpress_db_1  | 2018-08-21  5:21:47 0 [Note] InnoDB: Mutexes and rw_locks use                                   GCC atomic builtins
+wordpress_db_1  | 2018-08-21  5:21:47 0 [Note] InnoDB: Uses event mutexes
+wordpress_db_1  | 2018-08-21  5:21:47 0 [Note] InnoDB: Compressed tables use zli                                  b 1.2.11
+wordpress_db_1  | 2018-08-21  5:21:47 0 [Note] InnoDB: Number of pools: 1
+wordpress_db_1  | 2018-08-21  5:21:47 0 [Note] InnoDB: Using SSE2 crc32 instruct                                  ions
+wordpress_db_1  | 2018-08-21  5:21:47 0 [Note] InnoDB: Initializing buffer pool,                                   total size = 256M, instances = 1, chunk size = 128M
+wordpress_db_1  | 2018-08-21  5:21:47 0 [Note] InnoDB: Completed initialization                                   of buffer pool
+wordpress_db_1  | 2018-08-21  5:21:47 0 [Note] InnoDB: If the mysqld execution u                                  ser is authorized, page cleaner thread priority can be changed. See the man page                                   of setpriority().
+wordpress_db_1  | 2018-08-21  5:21:47 0 [Note] InnoDB: 128 out of 128 rollback s                                  egments are active.
+wordpress_db_1  | 2018-08-21  5:21:47 0 [Note] InnoDB: Creating shared tablespac                                  e for temporary tables
+wordpress_db_1  | 2018-08-21  5:21:47 0 [Note] InnoDB: Setting file './ibtmp1' s                                  ize to 12 MB. Physically writing the file full; Please wait ...
+wordpress_db_1  | 2018-08-21  5:21:47 0 [Note] InnoDB: File './ibtmp1' size is n                                  ow 12 MB.
+wordpress_db_1  | 2018-08-21  5:21:47 0 [Note] InnoDB: Waiting for purge to star                                  t
+wordpress_db_1  | 2018-08-21  5:21:47 0 [Note] InnoDB: 10.3.9 started; log seque                                  nce number 1630815; transaction id 21
+wordpress_db_1  | 2018-08-21  5:21:47 0 [Note] InnoDB: Loading buffer pool(s) fr                                  om /var/lib/mysql/ib_buffer_pool
+wordpress_db_1  | 2018-08-21  5:21:47 0 [Note] Plugin 'FEEDBACK' is disabled.
+wordpress_db_1  | 2018-08-21  5:21:47 0 [Warning] 'user' entry 'root@55ae0bee1de                                  2' ignored in --skip-name-resolve mode.
+wordpress_db_1  | 2018-08-21  5:21:47 0 [Warning] 'user' entry '@55ae0bee1de2' i                                  gnored in --skip-name-resolve mode.
+wordpress_db_1  | 2018-08-21  5:21:47 0 [Warning] 'proxies_priv' entry '@% root@                                  55ae0bee1de2' ignored in --skip-name-resolve mode.
+wordpress_db_1  | 2018-08-21  5:21:47 0 [Note] InnoDB: Buffer pool(s) load compl                                  eted at 180821  5:21:47
+wordpress_db_1  | 2018-08-21  5:21:47 0 [Note] Reading of all Master_info entrie                                  s succeded
+wordpress_db_1  | 2018-08-21  5:21:47 0 [Note] Added new Master_info '' to hash                                   table
+wordpress_db_1  | 2018-08-21  5:21:47 0 [Note] mysqld: ready for connections.
+wordpress_db_1  | Version: '10.3.9-MariaDB-1:10.3.9+maria~bionic'  socket: '/var                                  /run/mysqld/mysqld.sock'  port: 0  mariadb.org binary distribution
+wordpress_db_1  | Warning: Unable to load '/usr/share/zoneinfo/leap-seconds.list                                  ' as time zone. Skipping it.
+wordpress_1     |
+wordpress_1     | Warning: mysqli::__construct(): (HY000/2002): Connection refus                                  ed in Standard input code on line 22
+wordpress_1     |
+wordpress_1     | MySQL Connection Error: (2002) Connection refused
+wordpress_db_1  | 2018-08-21  5:21:50 10 [Warning] 'proxies_priv' entry '@% root                                  @55ae0bee1de2' ignored in --skip-name-resolve mode.
+wordpress_db_1  |
+wordpress_db_1  | 2018-08-21  5:21:50 0 [Note] mysqld (initiated by: unknown): N                                  ormal shutdown
+wordpress_db_1  | 2018-08-21  5:21:50 0 [Note] InnoDB: FTS optimize thread exiti                                  ng.
+wordpress_db_1  | 2018-08-21  5:21:50 0 [Note] Event Scheduler: Purging the queu                                  e. 0 events
+wordpress_db_1  | 2018-08-21  5:21:50 0 [Note] InnoDB: Starting shutdown...
+wordpress_db_1  | 2018-08-21  5:21:50 0 [Note] InnoDB: Dumping buffer pool(s) to                                   /var/lib/mysql/ib_buffer_pool
+wordpress_db_1  | 2018-08-21  5:21:50 0 [Note] InnoDB: Buffer pool(s) dump compl                                  eted at 180821  5:21:50
+wordpress_db_1  | 2018-08-21  5:21:51 0 [Note] InnoDB: Shutdown completed; log s                                  equence number 1630824; transaction id 24
+wordpress_db_1  | 2018-08-21  5:21:51 0 [Note] InnoDB: Removed temporary tablesp                                  ace data file: "ibtmp1"
+wordpress_db_1  | 2018-08-21  5:21:51 0 [Note] mysqld: Shutdown complete
+wordpress_db_1  |
+wordpress_db_1  |
+wordpress_db_1  | MySQL init process done. Ready for start up.
+wordpress_db_1  |
+wordpress_db_1  | 2018-08-21  5:21:51 0 [Note] mysqld (mysqld 10.3.9-MariaDB-1:1                                  0.3.9+maria~bionic) starting as process 1 ...
+wordpress_db_1  | 2018-08-21  5:21:51 0 [Note] InnoDB: Using Linux native AIO
+wordpress_db_1  | 2018-08-21  5:21:51 0 [Note] InnoDB: Mutexes and rw_locks use                                   GCC atomic builtins
+wordpress_db_1  | 2018-08-21  5:21:51 0 [Note] InnoDB: Uses event mutexes
+wordpress_db_1  | 2018-08-21  5:21:51 0 [Note] InnoDB: Compressed tables use zli                                  b 1.2.11
+wordpress_db_1  | 2018-08-21  5:21:51 0 [Note] InnoDB: Number of pools: 1
+wordpress_db_1  | 2018-08-21  5:21:51 0 [Note] InnoDB: Using SSE2 crc32 instruct                                  ions
+wordpress_db_1  | 2018-08-21  5:21:51 0 [Note] InnoDB: Initializing buffer pool,                                   total size = 256M, instances = 1, chunk size = 128M
+wordpress_db_1  | 2018-08-21  5:21:51 0 [Note] InnoDB: Completed initialization                                   of buffer pool
+wordpress_db_1  | 2018-08-21  5:21:51 0 [Note] InnoDB: If the mysqld execution u                                  ser is authorized, page cleaner thread priority can be changed. See the man page                                   of setpriority().
+wordpress_db_1  | 2018-08-21  5:21:51 0 [Note] InnoDB: 128 out of 128 rollback s                                  egments are active.
+wordpress_db_1  | 2018-08-21  5:21:51 0 [Note] InnoDB: Creating shared tablespac                                  e for temporary tables
+wordpress_db_1  | 2018-08-21  5:21:51 0 [Note] InnoDB: Setting file './ibtmp1' s                                  ize to 12 MB. Physically writing the file full; Please wait ...
+wordpress_db_1  | 2018-08-21  5:21:51 0 [Note] InnoDB: File './ibtmp1' size is n                                  ow 12 MB.
+wordpress_db_1  | 2018-08-21  5:21:51 0 [Note] InnoDB: Waiting for purge to star                                  t
+wordpress_db_1  | 2018-08-21  5:21:51 0 [Note] InnoDB: 10.3.9 started; log seque                                  nce number 1630824; transaction id 21
+wordpress_db_1  | 2018-08-21  5:21:51 0 [Note] InnoDB: Loading buffer pool(s) fr                                  om /var/lib/mysql/ib_buffer_pool
+wordpress_db_1  | 2018-08-21  5:21:51 0 [Note] Plugin 'FEEDBACK' is disabled.
+wordpress_db_1  | 2018-08-21  5:21:51 0 [Note] Server socket created on IP: '::'                                  .
+wordpress_db_1  | 2018-08-21  5:21:51 0 [Warning] 'proxies_priv' entry '@% root@                                  55ae0bee1de2' ignored in --skip-name-resolve mode.
+wordpress_db_1  | 2018-08-21  5:21:51 0 [Note] InnoDB: Buffer pool(s) load compl                                  eted at 180821  5:21:51
+wordpress_db_1  | 2018-08-21  5:21:51 0 [Note] Reading of all Master_info entrie                                  s succeded
+wordpress_db_1  | 2018-08-21  5:21:51 0 [Note] Added new Master_info '' to hash                                   table
+wordpress_db_1  | 2018-08-21  5:21:51 0 [Note] mysqld: ready for connections.
+wordpress_db_1  | Version: '10.3.9-MariaDB-1:10.3.9+maria~bionic'  socket: '/var                                  /run/mysqld/mysqld.sock'  port: 3306  mariadb.org binary distribution
+wordpress_1     | AH00558: apache2: Could not reliably determine the server's fu                                  lly qualified domain name, using 172.17.0.3. Set the 'ServerName' directive glob                                  ally to suppress this message
+wordpress_1     | AH00558: apache2: Could not reliably determine the server's fu                                  lly qualified domain name, using 172.17.0.3. Set the 'ServerName' directive glob                                  ally to suppress this message
+wordpress_1     | [Tue Aug 21 05:21:52.180062 2018] [mpm_prefork:notice] [pid 1]                                   AH00163: Apache/2.4.25 (Debian) PHP/7.2.8 configured -- resuming normal operati                                  ons
+wordpress_1     | [Tue Aug 21 05:21:52.180943 2018] [core:notice] [pid 1] AH0009                                  4: Command line: 'apache2 -D FOREGROUND'
+wordpress_1     | 49.44.140.11 - - [21/Aug/2018:05:23:17 +0000] "GET / HTTP/1.1" 302 327 "-" "Mozilla/5.0 (Linux; Android 7.1.1; Moto G (5S) Plus Build/NPSS26.116-61-11) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.91 Mobile Safari/537.36"
+wordpress_1     | 49.44.140.11 - - [21/Aug/2018:05:23:17 +0000] "GET /wp-admin/install.php HTTP/1.1" 200 4209 "-" "Mozilla/5.0 (Linux; Android 7.1.1; Moto G (5S) Plus Build/NPSS26.116-61-11) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.91 Mobile Safari/537.36"
+wordpress_1     | 49.44.140.11 - - [21/Aug/2018:05:23:18 +0000] "GET /wp-admin/css/install.min.css?ver=4.9.8 HTTP/1.1" 200 2289 "http://18.205.185.121:8080/wp-admin/install.php" "Mozilla/5.0 (Linux; Android 7.1.1; Moto G (5S) Plus Build/NPSS26.116-61-11) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.91 Mobile Safari/537.36"
+wordpress_1     | 49.44.140.11 - - [21/Aug/2018:05:23:18 +0000] "GET /wp-includes/css/buttons.min.css?ver=4.9.8 HTTP/1.1" 200 1781 "http://18.205.185.121:8080/wp-admin/install.php" "Mozilla/5.0 (Linux; Android 7.1.1; Moto G (5S) Plus Build/NPSS26.116-61-11) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.91 Mobile Safari/537.36"
+wordpress_1     | 49.44.140.11 - - [21/Aug/2018:05:23:18 +0000] "GET /wp-includes/css/dashicons.min.css?ver=4.9.8 HTTP/1.1" 200 28928 "http://18.205.185.121:8080/wp-admin/install.php" "Mozilla/5.0 (Linux; Android 7.1.1; Moto G (5S) Plus Build/NPSS26.116-61-11) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.91 Mobile Safari/537.36"
+wordpress_1     | 49.44.140.11 - - [21/Aug/2018:05:23:18 +0000] "GET /wp-includes/js/jquery/jquery.js?ver=1.12.4 HTTP/1.1" 200 34064 "http://18.205.185.121:8080/wp-admin/install.php" "Mozilla/5.0 (Linux; Android 7.1.1; Moto G (5S) Plus Build/NPSS26.116-61-11) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.91 Mobile Safari/537.36"
+wordpress_1     | 49.44.140.11 - - [21/Aug/2018:05:23:18 +0000] "GET /wp-admin/js/language-chooser.min.js?ver=4.9.8 HTTP/1.1" 200 534 "http://18.205.185.121:8080/wp-admin/install.php" "Mozilla/5.0 (Linux; Android 7.1.1; Moto G (5S) Plus Build/NPSS26.116-61-11) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.91 Mobile Safari/537.36"
+wordpress_1     | 49.44.140.11 - - [21/Aug/2018:05:23:18 +0000] "GET /wp-includes/js/jquery/jquery-migrate.min.js?ver=1.4.1 HTTP/1.1" 200 4310 "http://18.205.185.121:8080/wp-admin/install.php" "Mozilla/5.0 (Linux; Android 7.1.1; Moto G (5S) Plus Build/NPSS26.116-61-11) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.91 Mobile Safari/537.36"
+wordpress_1     | 49.44.140.11 - - [21/Aug/2018:05:23:19 +0000] "GET /wp-admin/images/wordpress-logo.svg?ver=20131107 HTTP/1.1" 200 1755 "http://18.205.185.121:8080/wp-admin/css/install.min.css?ver=4.9.8" "Mozilla/5.0 (Linux; Android 7.1.1; Moto G (5S) Plus Build/NPSS26.116-61-11) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.91 Mobile Safari/537.36"
+wordpress_1     | 49.44.140.11 - - [21/Aug/2018:05:23:19 +0000] "GET /wp-admin/images/spinner-2x.gif HTTP/1.1" 200 8767 "http://18.205.185.121:8080/wp-admin/css/install.min.css?ver=4.9.8" "Mozilla/5.0 (Linux; Android 7.1.1; Moto G (5S) Plus Build/NPSS26.116-61-11) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.91 Mobile Safari/537.36"
+wordpress_1     | 49.44.140.11 - - [21/Aug/2018:05:23:19 +0000] "GET /favicon.ico HTTP/1.1" 200 172 "http://18.205.185.121:8080/wp-admin/install.php" "Mozilla/5.0 (Linux; Android 7.1.1; Moto G (5S) Plus Build/NPSS26.116-61-11) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.91 Mobile Safari/537.36"
+wordpress_1     | 127.0.0.1 - - [21/Aug/2018:05:23:24 +0000] "OPTIONS * HTTP/1.0" 200 126 "-" "Apache/2.4.25 (Debian) PHP/7.2.8 (internal dummy connection)"
+wordpress_1     | 127.0.0.1 - - [21/Aug/2018:05:23:25 +0000] "OPTIONS * HTTP/1.0" 200 126 "-" "Apache/2.4.25 (Debian) PHP/7.2.8 (internal dummy connection)"
+wordpress_1     | 127.0.0.1 - - [21/Aug/2018:05:23:26 +0000] "OPTIONS * HTTP/1.0" 200 126 "-" "Apache/2.4.25 (Debian) PHP/7.2.8 (internal dummy connection)"
+**********************************************************************************************************************************
